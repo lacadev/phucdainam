@@ -1,0 +1,49 @@
+@use "../abstracts/variables.scss" as *;
+@use "../abstracts/mixin.scss" as *;
+
+.post-share {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color, #eee);
+  display: flex;
+}
+
+.post-hero {
+  padding: 140px 0 80px;
+  text-align: center;
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(var(--primary-rgb), 0.05) 0%,
+    transparent 70%
+  );
+
+  .breadcrumb-container {
+    margin-bottom: 30px;
+  }
+
+  .post-title {
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+    line-height: 1.1;
+  }
+
+  .post-meta {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+
+    a {
+      color: $primaryColor;
+    }
+  }
+}
+
+/* Single Service Page */
+.single-template {
+
+}
