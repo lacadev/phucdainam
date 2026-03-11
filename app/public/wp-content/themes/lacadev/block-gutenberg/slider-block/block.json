@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/slider-block",
+    "version": "1.0.0",
+    "title": "Slider Block",
+    "category": "common",
+    "icon": "images-alt2",
+    "description": "A responsive image slider using Swiper.js",
+    "supports": {
+        "html": false,
+        "anchor": true
+    },
+    "attributes": {
+        "images": {
+            "type": "array",
+            "default": []
+        },
+        "autoplay": {
+            "type": "boolean",
+            "default": true
+        },
+        "autoplayDelay": {
+            "type": "number",
+            "default": 3000
+        },
+        "slidesPerView": {
+            "type": "number",
+            "default": 1
+        },
+        "spaceBetween": {
+            "type": "number",
+            "default": 0
+        },
+        "loop": {
+            "type": "boolean",
+            "default": true
+        },
+        "showPagination": {
+            "type": "boolean",
+            "default": true
+        },
+        "showNavigation": {
+            "type": "boolean",
+            "default": true
+        }
+    },
+    "textdomain": "lacadev",
+    "editorScript": "file:./index.js",
+    "viewScript": "file:./view.js",
+    "style": "file:./style.scss",
+    "render": "file:./render.php"
+}

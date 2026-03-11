@@ -11,6 +11,7 @@ import { initAboutLacaHero } from './pages/about-laca';
 import { initContactPage } from './pages/contact';
 import { initCommentForm } from './pages/comments';
 import './project-block.js';
+import '../../../block-gutenberg/slider-block/view.js';
 import AOS from 'aos';
 
 gsap.registerPlugin( ScrollTrigger );
@@ -275,56 +276,68 @@ function initMobileMenu() {
 		return;
 	}
 
-	// Toggle mobile overlay
-	burgerBtn.addEventListener( 'click', () => {
+	function toggleMenu( forceClose = false ) {
 		const isActive = burgerBtn.classList.contains( 'active' );
+		const shouldClose = forceClose || isActive;
 
-		if ( isActive ) {
+		if ( shouldClose ) {
 			burgerBtn.classList.remove( 'active' );
 			overlay.classList.remove( 'active' );
 			document.body.classList.remove( 'menu-open' );
+			
+			// Close all submenus when closing the main menu
+			const openSubmenus = overlay.querySelectorAll( '.has-children.open' );
+			openSubmenus.forEach( ( item ) => item.classList.remove( 'open' ) );
 		} else {
 			burgerBtn.classList.add( 'active' );
 			overlay.classList.add( 'active' );
 			document.body.classList.add( 'menu-open' );
 		}
-	} );
+	}
 
-	// Combined logic for mobile submenus and navigation
-	const menuLinks = overlay.querySelectorAll( 'a' );
-	menuLinks.forEach( ( link ) => {
-		link.addEventListener( 'click', ( e ) => {
-			const parentLi = link.parentElement;
-			const isParent = parentLi.classList.contains( 'has-children' );
+	burgerBtn.addEventListener( 'click', () => toggleMenu() );
 
-			if ( window.innerWidth < 992 && isParent ) {
-				const isOpen = parentLi.classList.contains( 'open' );
+	// Close menu when clicking on the overlay background (if it exists)
+	const overlayBg = overlay.querySelector( '.header__overlay-bg' );
+	if ( overlayBg ) {
+		overlayBg.addEventListener( 'click', () => toggleMenu( true ) );
+	}
 
-				if ( ! isOpen ) {
-					// First click on parent: prevent navigation & open submenu
-					e.preventDefault();
-					e.stopPropagation();
+	// Use event delegation for all clicks inside the overlay
+	overlay.addEventListener( 'click', ( e ) => {
+		const targetLink = e.target.closest( 'a' );
+		if ( ! targetLink ) {
+			return;
+		}
 
-					// Close other open submenus (Accordion style)
-					const allParents =
-						overlay.querySelectorAll( '.has-children' );
-					allParents.forEach( ( p ) => {
-						if ( p !== parentLi ) {
-							p.classList.remove( 'open' );
-						}
-					} );
+		const menuItem = targetLink.closest( '.menu-item' );
+		if ( ! menuItem ) {
+			return;
+		}
 
-					parentLi.classList.add( 'open' );
-					return; // Stop here, keep overlay open
+		const isParent = menuItem.classList.contains( 'has-children' );
+		const isMobile = window.innerWidth < 1200;
+
+		if ( isMobile && isParent ) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			const isOpen = menuItem.classList.contains( 'open' );
+
+			// Close other open submenus at the same level (Accordion)
+			const siblings = menuItem.parentElement.querySelectorAll( ':scope > .has-children' );
+			siblings.forEach( ( sibling ) => {
+				if ( sibling !== menuItem ) {
+					sibling.classList.remove( 'open' );
 				}
-			}
+			} );
 
-			// If it's a regular link, or second click on parent, or desktop link:
-			// Close the whole overlay and let navigation happen
-			burgerBtn.classList.remove( 'active' );
-			overlay.classList.remove( 'active' );
-			document.body.classList.remove( 'menu-open' );
-		} );
+			menuItem.classList.toggle( 'open' );
+			console.log( `📱 Mobile menu: ${menuItem.classList.contains( 'open' ) ? 'Opened' : 'Closed'} sub-menu` );
+		} else if ( ! isParent ) {
+			// regular link - close menu
+			toggleMenu( true );
+		}
 	} );
 }
 
