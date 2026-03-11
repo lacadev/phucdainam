@@ -4,7 +4,7 @@
     "name": "lacadev/slider-block",
     "version": "1.0.0",
     "title": "Slider Block",
-    "category": "common",
+    "category": "lacadev-blocks",
     "icon": "images-alt2",
     "description": "A responsive image slider using Swiper.js",
     "supports": {
