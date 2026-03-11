@@ -122,6 +122,20 @@ function lacadev_register_custom_blocks() {
                 $block_args['editor_script'] = $editor_script_handle;
                 $block_args['editor_style'] = $editor_style_handle;
                 $block_args['style'] = $style_handle;
+
+                // Register view script (frontend interactivity) if it exists
+                $view_js = $blocks_dir . '/' . $block . '/build/view.js';
+                if (file_exists($view_js)) {
+                    $view_script_handle = 'lacadev-block-' . $block . '-view';
+                    wp_register_script(
+                        $view_script_handle,
+                        $theme_root_uri . '/block-gutenberg/' . $block . '/build/view.js',
+                        $asset['dependencies'] ?? [],
+                        $asset['version'] ?? null,
+                        true
+                    );
+                    $block_args['view_script'] = $view_script_handle;
+                }
             } else {
                 // Backward compatibility for blocks that haven't been refactored
                 $block_args['editor_script'] = 'lacadev-gutenberg-blocks';

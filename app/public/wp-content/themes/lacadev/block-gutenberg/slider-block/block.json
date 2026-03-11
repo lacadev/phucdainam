@@ -46,8 +46,5 @@
         }
     },
     "textdomain": "lacadev",
-    "editorScript": "file:./index.js",
-    "viewScript": "file:./view.js",
-    "style": "file:./style.scss",
     "render": "file:./render.php"
 }

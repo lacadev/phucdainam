@@ -9,14 +9,23 @@ const blocks = fs.readdirSync(blocksDir).filter(dir => {
 
 // Create a separate configuration object for each block
 module.exports = blocks.map(block => {
+  const blockDir = path.join(blocksDir, block);
+  const entry = {
+    index: path.join(blockDir, 'index.js')
+  };
+
+  // Include view.js as a separate entry if it exists (frontend interactivity)
+  const viewFile = path.join(blockDir, 'view.js');
+  if (fs.existsSync(viewFile)) {
+    entry.view = viewFile;
+  }
+
   return {
     ...defaultConfig,
-    entry: {
-      index: path.join(blocksDir, block, 'index.js')
-    },
+    entry,
     output: {
       ...defaultConfig.output,
-      path: path.join(blocksDir, block, 'build'),
+      path: path.join(blockDir, 'build'),
       filename: '[name].js'
     }
   };
