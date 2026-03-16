@@ -1,0 +1,90 @@
+@use "../../resources/styles/theme/abstracts/variables" as *;
+@use "../../resources/styles/theme/abstracts/mixin" as *;
+
+.laca-content-bg {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0 !important; // override global section rule
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: scale(1.03); // subtle zoom buffer
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, var(--overlay-opacity, 0.6));
+        pointer-events: none;
+    }
+
+    &__inner {
+        position: relative;
+        z-index: 1;
+        max-width: 90rem;
+        margin: 0 auto;
+        padding: 8rem 2rem;
+        color: #fff;
+
+        @include maxWidth($md) {
+            padding: 5rem 2rem;
+        }
+    }
+
+    &__title {
+        font-size: clamp(2.4rem, 4vw, 4rem);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        text-align: center;
+        margin: 0 0 1.2rem;
+        color: #fff;
+    }
+
+    &__subtitle {
+        font-size: clamp(1.4rem, 2vw, 1.8rem);
+        font-style: italic;
+        font-weight: 300;
+        text-align: center;
+        margin: 0 0 4rem;
+        color: rgba(255, 255, 255, 0.85);
+        letter-spacing: 0.04em;
+    }
+
+    &__content {
+        font-size: 1.5rem;
+        line-height: 1.85;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 80rem;
+        margin: 0 auto;
+
+        p {
+            margin: 0 0 2rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        h3, h4 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 3rem 0 1rem;
+            color: #fff;
+            letter-spacing: 0.03em;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+        }
+    }
+}

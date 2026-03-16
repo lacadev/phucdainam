@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/news-list-block",
+    "version": "1.0.0",
+    "title": "News List Block",
+    "category": "lacadev-blocks",
+    "icon": "admin-post",
+    "description": "Hiển thị danh sách tin tức theo bộ lọc: mới nhất, ngẫu nhiên, xem nhiều nhất; có thể lọc theo danh mục",
+    "supports": {
+        "html": false,
+        "anchor": true
+    },
+    "attributes": {
+        "title": {
+            "type": "string",
+            "default": "Xu hướng nhà đẹp"
+        },
+        "subtitle": {
+            "type": "string",
+            "default": "Tin tức"
+        },
+        "orderBy": {
+            "type": "string",
+            "default": "date",
+            "enum": ["date", "rand", "comment_count"]
+        },
+        "selectedCats": {
+            "type": "array",
+            "items": { "type": "number" },
+            "default": []
+        },
+        "postsCount": {
+            "type": "number",
+            "default": 4
+        },
+        "viewAllUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "viewAllText": {
+            "type": "string",
+            "default": "Xem tất cả"
+        },
+        "showExcerpt": {
+            "type": "boolean",
+            "default": true
+        },
+        "showCategory": {
+            "type": "boolean",
+            "default": true
+        }
+    },
+    "textdomain": "lacadev",
+    "render": "file:./render.php"
+}

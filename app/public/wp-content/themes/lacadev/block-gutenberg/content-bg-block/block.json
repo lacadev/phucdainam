@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/content-bg-block",
+    "version": "1.0.0",
+    "title": "Content Background Block",
+    "category": "lacadev-blocks",
+    "icon": "format-image",
+    "description": "Section với background image, overlay tối và nội dung rich text",
+    "supports": {
+        "html": false,
+        "anchor": true
+    },
+    "attributes": {
+        "bgId": {
+            "type": "number",
+            "default": 0
+        },
+        "bgUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "overlayOpacity": {
+            "type": "number",
+            "default": 60
+        },
+        "title": {
+            "type": "string",
+            "default": ""
+        },
+        "subtitle": {
+            "type": "string",
+            "default": ""
+        },
+        "content": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "textdomain": "lacadev",
+    "render": "file:./render.php"
+}

@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/project-list-block",
+    "version": "1.0.0",
+    "title": "Project List Block",
+    "category": "lacadev-blocks",
+    "icon": "grid-view",
+    "description": "Hiển thị danh sách dự án — Tự động (theo danh mục) hoặc Thủ công (chọn từng bài)",
+    "supports": {
+        "html": false,
+        "anchor": true
+    },
+    "attributes": {
+        "title": {
+            "type": "string",
+            "default": "Thiết kế kiến trúc"
+        },
+        "subtitle": {
+            "type": "string",
+            "default": "Dịch vụ"
+        },
+        "displayMode": {
+            "type": "string",
+            "default": "auto",
+            "enum": ["auto", "manual"]
+        },
+        "orderBy": {
+            "type": "string",
+            "default": "date",
+            "enum": ["date", "rand", "comment_count"]
+        },
+        "selectedCats": {
+            "type": "array",
+            "items": { "type": "number" },
+            "default": []
+        },
+        "postsCount": {
+            "type": "number",
+            "default": 4
+        },
+        "manualPostIds": {
+            "type": "array",
+            "items": { "type": "number" },
+            "default": []
+        }
+    },
+    "textdomain": "lacadev",
+    "render": "file:./render.php"
+}

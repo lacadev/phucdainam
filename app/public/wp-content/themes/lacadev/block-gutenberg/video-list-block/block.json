@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "lacadev/video-list-block",
+    "version": "1.0.0",
+    "title": "Video List Block",
+    "category": "lacadev-blocks",
+    "icon": "video-alt3",
+    "description": "Hiển thị danh sách video dạng mosaic grid. Click vào video để mở lightbox popup.",
+    "supports": {
+        "html": false,
+        "anchor": true
+    },
+    "attributes": {
+        "title": {
+            "type": "string",
+            "default": "Công trình thực tế"
+        },
+        "subtitle": {
+            "type": "string",
+            "default": "Review"
+        },
+        "viewAllUrl": {
+            "type": "string",
+            "default": ""
+        },
+        "viewAllText": {
+            "type": "string",
+            "default": "Xem tất cả"
+        },
+        "videos": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "string" },
+                    "url": { "type": "string" },
+                    "thumbnailUrl": { "type": "string" },
+                    "thumbnailId": { "type": "number" },
+                    "label": { "type": "string" }
+                }
+            },
+            "default": []
+        }
+    },
+    "textdomain": "lacadev",
+    "render": "file:./render.php"
+}

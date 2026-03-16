@@ -1,0 +1,59 @@
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/@wordpress/scripts/node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/@wordpress/scripts/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./block-gutenberg/video-block/style.scss ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.laca-video-block__inner {
+  width: 100%;
+}
+.laca-video-block__iframe-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #000;
+}
+.laca-video-block__iframe-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.laca-video-block__video-wrap {
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #000;
+}
+.laca-video-block__video-wrap video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.laca-video-block__placeholder {
+  min-height: 20rem;
+  border: 2px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.laca-video-block__url-label {
+  font-size: 1.4rem;
+  color: #555;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 0.6rem;
+  text-align: center;
+  word-break: break-all;
+  margin: 0;
+}

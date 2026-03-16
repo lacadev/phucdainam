@@ -15,5 +15,9 @@ import './tech-list-block';
 import './button-block';
 import './project-block';
 import './video-block';
+import './content-bg-block';
+import './project-list-block';
+import './news-list-block';
 // slider-block has its own build/ folder - registered separately via PHP
+
 

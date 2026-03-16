@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./block-gutenberg/video-block/edit.js":
-/*!*********************************************!*\
-  !*** ./block-gutenberg/video-block/edit.js ***!
-  \*********************************************/
+/***/ "./block-gutenberg/content-bg-block/edit.js":
+/*!**************************************************!*\
+  !*** ./block-gutenberg/content-bg-block/edit.js ***!
+  \**************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -28,145 +28,55 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
 
 
 
-
-
-/**
- * Convert YouTube / Vimeo URL → embed URL for editor preview.
- * Falls back to original URL if not recognised.
- */
-function getEmbedUrl(url) {
-  // YouTube
-  var ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  if (ytMatch) {
-    return "https://www.youtube.com/embed/".concat(ytMatch[1]);
-  }
-  // Vimeo
-  var vmMatch = url.match(/vimeo\.com\/(\d+)/);
-  if (vmMatch) {
-    return "https://player.vimeo.com/video/".concat(vmMatch[1]);
-  }
-  return url;
-}
 function Edit(_ref) {
   var attributes = _ref.attributes,
     setAttributes = _ref.setAttributes;
-  var sourceType = attributes.sourceType,
-    videoUrl = attributes.videoUrl,
-    videoId = attributes.videoId,
-    videoFileUrl = attributes.videoFileUrl,
-    autoplay = attributes.autoplay,
-    loop = attributes.loop,
-    muted = attributes.muted,
-    controls = attributes.controls,
-    posterUrl = attributes.posterUrl,
-    posterId = attributes.posterId;
+  var bgId = attributes.bgId,
+    bgUrl = attributes.bgUrl,
+    overlayOpacity = attributes.overlayOpacity,
+    title = attributes.title,
+    subtitle = attributes.subtitle,
+    content = attributes.content;
   var blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)({
-    className: 'laca-video-block'
+    className: 'laca-content-bg'
   });
-  var handleSelectVideo = function handleSelectVideo(media) {
-    setAttributes({
-      videoId: media.id,
-      videoFileUrl: media.url
-    });
+  var overlayStyle = {
+    position: 'absolute',
+    inset: 0,
+    background: "rgba(0,0,0,".concat(overlayOpacity / 100, ")")
   };
-  var handleRemoveVideo = function handleRemoveVideo() {
-    setAttributes({
-      videoId: 0,
-      videoFileUrl: ''
-    });
+  var sectionStyle = {
+    position: 'relative',
+    backgroundImage: bgUrl ? "url(".concat(bgUrl, ")") : 'none',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundColor: bgUrl ? 'transparent' : '#1a1a1a',
+    minHeight: '400px'
   };
-  var handleSelectPoster = function handleSelectPoster(media) {
-    setAttributes({
-      posterId: media.id,
-      posterUrl: media.url
-    });
-  };
-  var handleRemovePoster = function handleRemovePoster() {
-    setAttributes({
-      posterId: 0,
-      posterUrl: ''
-    });
-  };
-  var hasVideo = sourceType === 'url' && videoUrl || sourceType === 'file' && videoFileUrl;
   return (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Cài đặt Video', 'lacadev'),
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Background', 'lacadev'),
     initialOpen: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.SelectControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Nguồn Video', 'lacadev'),
-    value: sourceType,
-    options: [{
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('URL (YouTube, Vimeo…)', 'lacadev'),
-      value: 'url'
-    }, {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('File Upload', 'lacadev'),
-      value: 'file'
-    }],
-    onChange: function onChange(val) {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
+    onSelect: function onSelect(media) {
       return setAttributes({
-        sourceType: val
+        bgId: media.id,
+        bgUrl: media.url
       });
-    }
-  }), sourceType === 'url' && (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('URL Video', 'lacadev'),
-    value: videoUrl,
-    placeholder: "https://www.youtube.com/watch?v=...",
-    onChange: function onChange(val) {
-      return setAttributes({
-        videoUrl: val
-      });
-    }
-  }), sourceType === 'file' && (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
-    onSelect: handleSelectVideo,
-    allowedTypes: ['video'],
-    value: videoId,
+    },
+    allowedTypes: ['image'],
+    value: bgId,
     render: function render(_ref2) {
       var open = _ref2.open;
-      return (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
-        className: "laca-video-block__media-control"
-      }, videoFileUrl ? (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("video", {
-        src: videoFileUrl,
-        preload: "metadata",
-        style: {
-          width: '100%',
-          maxHeight: '160px',
-          borderRadius: '4px',
-          marginBottom: '8px'
-        }
-      }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-        variant: "secondary",
-        onClick: open,
-        style: {
-          marginRight: '8px'
-        }
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Thay video', 'lacadev')), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-        variant: "link",
-        isDestructive: true,
-        onClick: handleRemoveVideo
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Xoá', 'lacadev'))) : (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-        variant: "primary",
-        onClick: open
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Chọn File Video', 'lacadev')));
-    }
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Poster (Ảnh thumbnail)', 'lacadev'),
-    initialOpen: false
-  }, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
-    onSelect: handleSelectPoster,
-    allowedTypes: ['image'],
-    value: posterId,
-    render: function render(_ref3) {
-      var open = _ref3.open;
-      return (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
-        className: "laca-video-block__media-control"
-      }, posterUrl ? (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("img", {
-        src: posterUrl,
-        alt: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Poster', 'lacadev'),
+      return (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", null, bgUrl ? (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("img", {
+        src: bgUrl,
+        alt: "",
         style: {
           width: '100%',
           height: '80px',
           objectFit: 'cover',
           borderRadius: '4px',
-          marginBottom: '8px'
+          marginBottom: '8px',
+          display: 'block'
         }
       }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
         variant: "secondary",
@@ -174,97 +84,94 @@ function Edit(_ref) {
         style: {
           marginRight: '8px'
         }
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Thay poster', 'lacadev')), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Thay ảnh', 'lacadev')), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
         variant: "link",
         isDestructive: true,
-        onClick: handleRemovePoster
+        onClick: function onClick() {
+          return setAttributes({
+            bgId: 0,
+            bgUrl: ''
+          });
+        }
       }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Xoá', 'lacadev'))) : (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-        variant: "secondary",
+        variant: "primary",
         onClick: open
-      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Chọn Ảnh Poster', 'lacadev')));
+      }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Chọn ảnh nền', 'lacadev')));
     }
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Tuỳ chọn phát', 'lacadev'),
-    initialOpen: false
-  }, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Hiển thị controls', 'lacadev'),
-    checked: controls,
+  })), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.RangeControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Độ tối overlay (%)', 'lacadev'),
+    value: overlayOpacity,
     onChange: function onChange(val) {
       return setAttributes({
-        controls: val
+        overlayOpacity: val
       });
-    }
-  }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Tự động phát', 'lacadev'),
-    checked: autoplay,
-    onChange: function onChange(val) {
-      return setAttributes({
-        autoplay: val
-      });
-    }
-  }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Tắt tiếng', 'lacadev'),
-    checked: muted,
-    onChange: function onChange(val) {
-      return setAttributes({
-        muted: val
-      });
-    }
-  }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Lặp lại', 'lacadev'),
-    checked: loop,
-    onChange: function onChange(val) {
-      return setAttributes({
-        loop: val
-      });
-    }
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", _objectSpread({}, blockProps), !hasVideo ? (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Placeholder, {
-    icon: "video-alt3",
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Video Block', 'lacadev'),
-    instructions: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Chọn nguồn video ở thanh bên phải (URL hoặc file upload)', 'lacadev'),
-    className: "laca-video-block__placeholder"
-  }) : (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
-    className: "laca-video-block__preview"
-  }, sourceType === 'url' && videoUrl ? (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
-    className: "laca-video-block__iframe-wrap"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("iframe", {
-    src: getEmbedUrl(videoUrl),
-    frameBorder: "0",
-    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-    allowFullScreen: true,
-    style: {
-      width: '100%',
-      height: '100%',
-      border: 0
     },
-    title: "Video preview"
-  })) : (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("video", {
-    src: videoFileUrl,
-    poster: posterUrl || undefined,
-    controls: controls,
-    preload: "metadata",
+    min: 0,
+    max: 95,
+    step: 5,
     style: {
-      width: '100%',
-      borderRadius: '8px'
+      marginTop: '16px'
     }
-  }))));
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", _objectSpread({}, blockProps), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("section", {
+    className: "laca-content-bg__section",
+    style: sectionStyle
+  }, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+    className: "laca-content-bg__overlay",
+    style: overlayStyle
+  }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
+    className: "laca-content-bg__inner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    tagName: "h2",
+    className: "laca-content-bg__title",
+    value: title,
+    onChange: function onChange(val) {
+      return setAttributes({
+        title: val
+      });
+    },
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Tên công ty / Tiêu đề chính…', 'lacadev'),
+    allowedFormats: ['core/bold', 'core/italic']
+  }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    tagName: "p",
+    className: "laca-content-bg__subtitle",
+    value: subtitle,
+    onChange: function onChange(val) {
+      return setAttributes({
+        subtitle: val
+      });
+    },
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Slogan / Subtitle…', 'lacadev'),
+    allowedFormats: ['core/bold', 'core/italic']
+  }), (0,react__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    tagName: "div",
+    multiline: "p",
+    className: "laca-content-bg__content",
+    value: content,
+    onChange: function onChange(val) {
+      return setAttributes({
+        content: val
+      });
+    },
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Nội dung mô tả… (Enter để xuống dòng mới)', 'lacadev'),
+    allowedFormats: ['core/bold', 'core/italic', 'core/link', 'core/strikethrough']
+  })))));
 }
 
 /***/ }),
 
-/***/ "./block-gutenberg/video-block/index.js":
-/*!**********************************************!*\
-  !*** ./block-gutenberg/video-block/index.js ***!
-  \**********************************************/
+/***/ "./block-gutenberg/content-bg-block/index.js":
+/*!***************************************************!*\
+  !*** ./block-gutenberg/content-bg-block/index.js ***!
+  \***************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./block.json */ "./block-gutenberg/video-block/block.json");
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./block-gutenberg/video-block/edit.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./block-gutenberg/video-block/save.js");
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./style.scss */ "./block-gutenberg/video-block/style.scss");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./block.json */ "./block-gutenberg/content-bg-block/block.json");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./block-gutenberg/content-bg-block/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./block-gutenberg/content-bg-block/save.js");
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./style.scss */ "./block-gutenberg/content-bg-block/style.scss");
 
 
 
@@ -277,10 +184,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./block-gutenberg/video-block/save.js":
-/*!*********************************************!*\
-  !*** ./block-gutenberg/video-block/save.js ***!
-  \*********************************************/
+/***/ "./block-gutenberg/content-bg-block/save.js":
+/*!**************************************************!*\
+  !*** ./block-gutenberg/content-bg-block/save.js ***!
+  \**************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -291,10 +198,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./block-gutenberg/video-block/style.scss":
-/*!************************************************!*\
-  !*** ./block-gutenberg/video-block/style.scss ***!
-  \************************************************/
+/***/ "./block-gutenberg/content-bg-block/style.scss":
+/*!*****************************************************!*\
+  !*** ./block-gutenberg/content-bg-block/style.scss ***!
+  \*****************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
@@ -448,13 +355,13 @@ function _typeof(o) {
 
 /***/ }),
 
-/***/ "./block-gutenberg/video-block/block.json":
-/*!************************************************!*\
-  !*** ./block-gutenberg/video-block/block.json ***!
-  \************************************************/
+/***/ "./block-gutenberg/content-bg-block/block.json":
+/*!*****************************************************!*\
+  !*** ./block-gutenberg/content-bg-block/block.json ***!
+  \*****************************************************/
 /***/ (function(module) {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"lacadev/video-block","version":"1.0.0","title":"Video Block","category":"lacadev-blocks","icon":"video-alt3","description":"Nhúng video từ URL hoặc upload file video trực tiếp","supports":{"html":false,"anchor":true},"attributes":{"sourceType":{"type":"string","default":"url","enum":["url","file"]},"videoUrl":{"type":"string","default":""},"videoId":{"type":"number","default":0},"videoFileUrl":{"type":"string","default":""},"autoplay":{"type":"boolean","default":false},"loop":{"type":"boolean","default":false},"muted":{"type":"boolean","default":false},"controls":{"type":"boolean","default":true},"posterUrl":{"type":"string","default":""},"posterId":{"type":"number","default":0}},"textdomain":"lacadev","render":"file:./render.php"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"lacadev/content-bg-block","version":"1.0.0","title":"Content Background Block","category":"lacadev-blocks","icon":"format-image","description":"Section với background image, overlay tối và nội dung rich text","supports":{"html":false,"anchor":true},"attributes":{"bgId":{"type":"number","default":0},"bgUrl":{"type":"string","default":""},"overlayOpacity":{"type":"number","default":60},"title":{"type":"string","default":""},"subtitle":{"type":"string","default":""},"content":{"type":"string","default":""}},"textdomain":"lacadev","render":"file:./render.php"}');
 
 /***/ })
 
@@ -629,7 +536,7 @@ module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/tru
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-index"], function() { return __webpack_require__("./block-gutenberg/video-block/index.js"); })
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-index"], function() { return __webpack_require__("./block-gutenberg/content-bg-block/index.js"); })
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

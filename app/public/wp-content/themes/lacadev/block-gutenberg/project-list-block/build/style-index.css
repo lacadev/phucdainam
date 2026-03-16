@@ -1,0 +1,253 @@
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/@wordpress/scripts/node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/@wordpress/scripts/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./block-gutenberg/project-list-block/style.scss ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.laca-project-list {
+  padding: 5rem 0 7rem;
+}
+@media only screen and (max-width: 992px) {
+  .laca-project-list {
+    padding: 4rem 0 5rem;
+  }
+}
+.laca-project-list__header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2.4rem;
+}
+@media only screen and (max-width: 768px) {
+  .laca-project-list__header {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    gap: 1.6rem;
+  }
+}
+.laca-project-list__headings {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
+}
+.laca-project-list__subtitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.4rem;
+}
+.laca-project-list__title {
+  font-size: clamp(2.4rem, 3.5vw, 3.6rem);
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+  line-height: 1.2;
+}
+.laca-project-list__cats {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 1rem;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+@media only screen and (max-width: 768px) {
+  .laca-project-list__cats {
+    width: 100%;
+  }
+}
+.laca-project-list__cat-btn {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0.8rem 2rem;
+  border: 1px solid #d0cfc9;
+  border-radius: 5rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--text-color);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  white-space: nowrap;
+}
+.laca-project-list__cat-btn:hover, .laca-project-list__cat-btn.is-active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+}
+.laca-project-list__cat-btn--all {
+  background: var(--text-color);
+  border-color: var(--text-color);
+  color: #fff;
+}
+.laca-project-list__cat-btn--all:hover, .laca-project-list__cat-btn--all.is-active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.laca-project-list__divider {
+  border: none;
+  border-top: 1px solid #e8e5df;
+  margin: 0 0 3.2rem;
+}
+.laca-project-list__grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[4];
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.4rem;
+}
+@media only screen and (max-width: 992px) {
+  .laca-project-list__grid {
+    -ms-grid-columns: (1fr)[2];
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+@media only screen and (max-width: 576px) {
+  .laca-project-list__grid {
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+}
+.laca-project-list__card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.laca-project-list__card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.laca-project-list__card-img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.8rem;
+  aspect-ratio: 4/3;
+  background: #f0ede8;
+  margin-bottom: 1.6rem;
+}
+.laca-project-list__card-img img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+  -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: -webkit-transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), -webkit-transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.laca-project-list__card-img:hover img {
+  -webkit-transform: scale(1.06);
+      -ms-transform: scale(1.06);
+          transform: scale(1.06);
+}
+.laca-project-list__card-img-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e8e5df 0%, #d0ccc4 100%);
+}
+.laca-project-list__card-body {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.laca-project-list__card-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 1.2rem;
+  color: var(--text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.laca-project-list__card-title a {
+  color: inherit;
+  text-decoration: none;
+  -webkit-transition: color 0.2s ease;
+  transition: color 0.2s ease;
+}
+.laca-project-list__card-title a:hover {
+  color: var(--primary-color);
+}
+.laca-project-list__card-meta {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 0.6rem;
+}
+.laca-project-list__card-meta li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.6rem;
+  font-size: 1.35rem;
+  color: #666;
+  line-height: 1.4;
+}
+.laca-project-list__card-meta li svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  fill: var(--primary-color);
+}
+.laca-project-list__card-meta li strong {
+  color: var(--text-color);
+  font-weight: 500;
+}
+.laca-project-list__empty {
+  grid-column: 1/-1;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 3rem 0;
+}
+
+/*# sourceMappingURL=style-index.css.map*/
