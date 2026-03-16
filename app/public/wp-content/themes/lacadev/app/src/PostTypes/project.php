@@ -62,6 +62,14 @@ class Project extends \App\Abstracts\AbstractPostType
                     ->set_attribute('placeholder', 'Nhập loại thiết kế'),
                 Field::make('rich_text', 'usage_function', __('Công năng sử dụng', 'laca'))
                     ->set_attribute('placeholder', 'Nhập công năng sử dụng'),
+
+                Field::make('complex', 'project_gallery', __('Thư viện ảnh dự án', 'laca'))
+                    ->set_layout('tabbed-horizontal')
+                    ->set_collapsed(true)
+                    ->add_fields([
+                        Field::make('image', 'gallery_image', __('Ảnh', 'laca'))
+                            ->set_value_type('id'),
+                    ]),
             ]);
     }
 }

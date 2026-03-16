@@ -11,6 +11,11 @@ import { initAboutLacaHero } from './pages/about-laca';
 import { initContactPage } from './pages/contact';
 import { initCommentForm } from './pages/comments';
 import './project-block.js';
+import { initProjectListBlock } from './project-list-block.js';
+import { initVideoListBlock } from './video-list-block.js';
+import { initProjectGallery } from './project-gallery.js';
+import { initArchivePaginationAll } from './archive-pagination.js';
+import { initProjectArchiveAll } from './archive-project.js';
 import '../../../block-gutenberg/slider-block/view.js';
 import AOS from 'aos';
 
@@ -66,6 +71,11 @@ function initializePageFeatures() {
 	initMobileMenu();
 	initContactPage();
 	initCommentForm();
+	initProjectListBlock();
+	initVideoListBlock();
+	initProjectGallery();
+	initArchivePaginationAll();
+	initProjectArchiveAll();
 
 	// Refresh ScrollTrigger after items are initialized
 	setTimeout( () => {

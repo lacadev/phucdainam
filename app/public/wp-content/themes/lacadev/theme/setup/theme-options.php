@@ -73,6 +73,47 @@ $optionsPage = Container::make('theme_options', __('Laca Theme', 'laca'))
 			->set_attribute('placeholder', 'zalo'),
 	])
 
+	->add_tab(__('Footer | Chân trang', 'laca'), [
+		Field::make('image', 'bg_contact_ft', __('Hình ảnh nền', 'laca'))
+			->set_width(30),
+		Field::make('textarea', 'contact_slogan' . currentLanguage(), __('', 'laca'))
+			->set_width(70)
+			->set_attribute('placeholder', 'Nội dung block liên hệ'),
+
+		Field::make('image', 'logo_footer', __('Logo', 'laca'))
+			->set_width(30),
+		Field::make('textarea', 'footer_slogan' . currentLanguage(), __('', 'laca'))
+			->set_width(70)
+			->set_attribute('placeholder', 'slogan'),
+
+		Field::make('text', 'footer_title_menu_1' . currentLanguage(), __('', 'laca'))
+			->set_width(30)
+			->set_attribute('placeholder', 'Tiêu đề menu 1'),
+		Field::make('complex', 'footer_menu_1' . currentLanguage(), __('Địa điểm', 'laca'))
+			->set_width(70)
+			->set_layout('tabbed-vertical')
+			->add_fields([
+				Field::make('text', 'title', __('', 'laca'))->set_width(50)
+				->set_attribute('placeholder', 'Tiêu đề'),
+				Field::make('textarea', 'url', __('', 'laca'))->set_width(50)
+				->set_attribute('placeholder', 'Liên kết'),
+			])->set_header_template('<% if (title) { %><%- title %><% } %>'),
+
+		Field::make('text', 'footer_title_menu_2' . currentLanguage(), __('', 'laca'))
+			->set_width(30)
+			->set_attribute('placeholder', 'Tiêu đề menu 1'),
+		Field::make('complex', 'footer_menu_2' . currentLanguage(), __('Địa điểm', 'laca'))
+			->set_width(70)
+			->set_layout('tabbed-vertical')
+			->add_fields([
+				Field::make('text', 'title', __('', 'laca'))->set_width(50)
+				->set_attribute('placeholder', 'Tiêu đề'),
+				Field::make('textarea', 'url', __('', 'laca'))->set_width(50)
+				->set_attribute('placeholder', 'Liên kết'),
+			])->set_header_template('<% if (title) { %><%- title %><% } %>'),
+			
+	])
+
 	->add_tab(__('Scripts', 'laca'), [
 		Field::make('header_scripts', 'crb_header_script', __('Header Script', 'laca')),
 		Field::make('footer_scripts', 'crb_footer_script', __('Footer Script', 'laca')),

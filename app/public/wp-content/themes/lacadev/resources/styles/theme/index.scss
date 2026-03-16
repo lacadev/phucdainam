@@ -14,6 +14,10 @@
 @use "./layout/header.scss" as *;
 @use "./layout/footer.scss" as *;
 @use "./layout/blocks.scss" as *;
+@use "./layout/single-project.scss" as *;
+@use "./layout/single-post.scss" as *;
+@use "./layout/archive.scss" as *;
+@use "./layout/archive-project.scss" as *;
 @use "../../../block-gutenberg/slider-block/style.scss";
 
 @use "./pages/404.scss" as *;

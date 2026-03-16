@@ -26,16 +26,16 @@ Block::make(__('Block Service', 'mms'))
     ?>
         <section class="block-service">
             <div class="container">
-                <h2 class="block-title block-title-scroll"><?php echo $title; ?></h2>
-                <div class="block-desc"><?php echo $desc; ?></div>
+                <h2 class="block-title block-title-scroll"><?php echo esc_html($title); ?></h2>
+                <div class="block-desc"><?php echo wp_kses_post($desc); ?></div>
 
                 <div class="block-service__list">
                     <?php
                     foreach ($services as $service) :
-                        $permalink = get_the_permalink($service['id']);
-                        $title = get_the_title($service['id']);
-                        $desc = get_the_excerpt($service['id']);
-                        $firstLetter = substr($title, 0, 1);
+                        $permalink = esc_url(get_the_permalink($service['id']));
+                        $title = esc_html(get_the_title($service['id']));
+                        $desc = wp_kses_post(get_the_excerpt($service['id']));
+                        $firstLetter = esc_html(substr($title, 0, 1));
                     ?>
                         <div class="block-service__item">
                             <a href="<?php echo $permalink; ?>" class="item__link">

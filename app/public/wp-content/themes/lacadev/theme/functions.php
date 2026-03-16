@@ -212,6 +212,309 @@ function lacadev_register_search_query_vars($vars)
 add_filter('query_vars', 'lacadev_register_search_query_vars');
 
 // =============================================================================
+// ARCHIVE AJAX PAGINATION
+// =============================================================================
+
+/**
+ * AJAX handler – load archive page (posts, categories, tags, custom post types).
+ * Trả về JSON: { html: string, pagination: string, found: int }
+ */
+function lacadev_ajax_archive_load() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'theme_nonce' ) ) {
+        wp_send_json_error( [ 'message' => __( 'Invalid nonce', 'laca' ) ], 403 );
+    }
+
+    $paged        = max( 1, absint( $_POST['paged'] ?? 1 ) );
+    $posts_per    = max( 1, min( 48, absint( $_POST['posts_per_page'] ?? get_option( 'posts_per_page', 12 ) ) ) );
+    $post_type    = sanitize_key( $_POST['post_type'] ?? 'post' );
+    $cat_id       = absint( $_POST['cat_id'] ?? 0 );
+    $tag_id       = absint( $_POST['tag_id'] ?? 0 );
+    $tax_term     = absint( $_POST['tax_term'] ?? 0 );
+    $taxonomy     = sanitize_key( $_POST['taxonomy'] ?? '' );
+
+    $args = [
+        'post_type'           => $post_type,
+        'post_status'         => 'publish',
+        'posts_per_page'      => $posts_per,
+        'paged'               => $paged,
+        'ignore_sticky_posts' => true,
+        'no_found_rows'       => false,
+    ];
+
+    if ( $cat_id ) {
+        $args['cat'] = $cat_id;
+    } elseif ( $tag_id ) {
+        $args['tag_id'] = $tag_id;
+    } elseif ( $tax_term && $taxonomy ) {
+        $args['tax_query'] = [[
+            'taxonomy' => $taxonomy,
+            'field'    => 'term_id',
+            'terms'    => $tax_term,
+        ]];
+    }
+
+    $query = new WP_Query( $args );
+
+    // N+1 prevention
+    if ( ! empty( $query->posts ) ) {
+        update_post_caches( $query->posts, $post_type, true, true );
+        update_object_term_cache( wp_list_pluck( $query->posts, 'ID' ), $post_type );
+    }
+
+    // Render items HTML
+    ob_start();
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            $post_id    = get_the_ID();
+            $post_url   = get_permalink();
+            $post_title = get_the_title();
+            $thumb_id   = get_post_thumbnail_id();
+
+            $cats     = get_the_terms( $post_id, 'category' );
+            $cat_name = '';
+            $cat_url  = '';
+            if ( ! empty( $cats ) && ! is_wp_error( $cats ) ) {
+                $cat_name = esc_html( $cats[0]->name );
+                $cat_url  = esc_url( get_term_link( $cats[0] ) );
+            }
+
+            $the_post    = get_post( $post_id );
+            $excerpt_raw = has_excerpt( $post_id )
+                ? get_the_excerpt( $post_id )
+                : wp_strip_all_tags( $the_post->post_content );
+            $excerpt = wp_trim_words( $excerpt_raw, 18, '…' );
+            ?>
+            <article class="laca-news-list__item">
+                <a href="<?php echo esc_url( $post_url ); ?>" class="laca-news-list__thumb-link" tabindex="-1" aria-hidden="true">
+                    <div class="laca-news-list__thumb">
+                        <?php if ( $thumb_id ) : ?>
+                            <?php echo wp_get_attachment_image( $thumb_id, 'large', false, [
+                                'class'   => 'laca-news-list__img',
+                                'loading' => 'lazy',
+                                'alt'     => esc_attr( $post_title ),
+                            ] ); ?>
+                        <?php else : ?>
+                            <div class="laca-news-list__img-placeholder"></div>
+                        <?php endif; ?>
+                    </div>
+                </a>
+
+                <div class="laca-news-list__content">
+                    <?php if ( $cat_name ) : ?>
+                        <a href="<?php echo $cat_url; ?>" class="laca-news-list__cat"><?php echo $cat_name; ?></a>
+                    <?php endif; ?>
+
+                    <h3 class="laca-news-list__item-title">
+                        <a href="<?php echo esc_url( $post_url ); ?>"><?php echo esc_html( $post_title ); ?></a>
+                    </h3>
+
+                    <?php if ( $excerpt ) : ?>
+                        <p class="laca-news-list__excerpt"><?php echo esc_html( $excerpt ); ?></p>
+                    <?php endif; ?>
+
+                    <a href="<?php echo esc_url( $post_url ); ?>" class="laca-news-list__read-more">
+                        <?php esc_html_e( 'Xem thêm', 'laca' ); ?>
+                    </a>
+                </div>
+            </article>
+            <?php
+        }
+    }
+    $html = ob_get_clean();
+    wp_reset_postdata();
+
+    // Render pagination HTML
+    $pagination_html = '';
+    if ( $query->max_num_pages > 1 ) {
+        $pages = paginate_links( [
+            'base'      => '%_%',
+            'format'    => '',
+            'current'   => $paged,
+            'total'     => $query->max_num_pages,
+            'mid_size'  => 2,
+            'type'      => 'array',
+            'prev_next' => true,
+            'prev_text' => '&laquo;',
+            'next_text' => '&raquo;',
+        ] );
+
+        if ( is_array( $pages ) ) {
+            $pagination_html = '<nav class="pagination-container" aria-label="Page navigation"><ul class="pagination-list">';
+            foreach ( $pages as $page ) {
+                $is_current  = strpos( $page, 'current' ) !== false;
+                $is_dots     = strpos( $page, 'dots' ) !== false;
+                $item_class  = 'pagination-item';
+                if ( $is_current ) $item_class .= ' is-active';
+                if ( $is_dots )    $item_class .= ' is-dots';
+                $pagination_html .= '<li class="' . esc_attr( $item_class ) . '">' . $page . '</li>';
+            }
+            $pagination_html .= '</ul></nav>';
+        }
+    }
+
+    wp_send_json_success( [
+        'html'        => $html,
+        'pagination'  => $pagination_html,
+        'found'       => (int) $query->found_posts,
+        'max_pages'   => (int) $query->max_num_pages,
+        'current'     => $paged,
+    ] );
+}
+add_action( 'wp_ajax_lacadev_archive_load',        'lacadev_ajax_archive_load' );
+add_action( 'wp_ajax_nopriv_lacadev_archive_load', 'lacadev_ajax_archive_load' );
+
+// =============================================================================
+// AJAX: PROJECT ARCHIVE LOAD
+// =============================================================================
+/**
+ * AJAX handler cho trang archive dự án.
+ * Hỗ trợ filter theo project_cat và phân trang.
+ * Render project cards đúng kiểu laca-project-list__card với meta fields.
+ */
+function lacadev_ajax_project_archive_load() {
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'theme_nonce' ) ) {
+        wp_send_json_error( [ 'message' => __( 'Invalid nonce', 'laca' ) ], 403 );
+    }
+
+    $paged    = max( 1, absint( $_POST['paged'] ?? 1 ) );
+    $posts_per = max( 1, min( 48, absint( $_POST['posts_per_page'] ?? get_option( 'posts_per_page', 12 ) ) ) );
+    $cat_slug = isset( $_POST['cat_slug'] ) ? sanitize_title( wp_unslash( $_POST['cat_slug'] ) ) : '';
+
+    $args = [
+        'post_type'           => 'project',
+        'post_status'         => 'publish',
+        'posts_per_page'      => $posts_per,
+        'paged'               => $paged,
+        'ignore_sticky_posts' => true,
+        'no_found_rows'       => false,
+        'orderby'             => 'date',
+        'order'               => 'DESC',
+    ];
+
+    if ( $cat_slug ) {
+        $args['tax_query'] = [[
+            'taxonomy' => 'project_cat',
+            'field'    => 'slug',
+            'terms'    => $cat_slug,
+        ]];
+    }
+
+    $query = new WP_Query( $args );
+
+    // N+1 prevention
+    if ( ! empty( $query->posts ) ) {
+        update_post_caches( $query->posts, 'project', true, true );
+        update_object_term_cache( wp_list_pluck( $query->posts, 'ID' ), 'project' );
+    }
+
+    // Render project cards HTML
+    ob_start();
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+            $query->the_post();
+            $post_id    = get_the_ID();
+            $post_url   = get_permalink();
+            $post_title = get_the_title();
+            $thumb_id   = get_post_thumbnail_id();
+
+            $investor   = get_post_meta( $post_id, '_investor', true );
+            $location   = get_post_meta( $post_id, '_location', true );
+            $floors     = get_post_meta( $post_id, '_floors', true );
+            $front_area = get_post_meta( $post_id, '_front_area', true );
+            ?>
+            <article class="laca-project-list__card">
+                <a href="<?php echo esc_url( $post_url ); ?>" class="laca-project-list__card-link" aria-label="<?php echo esc_attr( $post_title ); ?>">
+                    <div class="laca-project-list__card-img">
+                        <?php if ( $thumb_id ) : ?>
+                            <?php echo wp_get_attachment_image( $thumb_id, 'large', false, [
+                                'loading' => 'lazy',
+                                'alt'     => esc_attr( $post_title ),
+                            ] ); ?>
+                        <?php else : ?>
+                            <div class="laca-project-list__card-img-placeholder"></div>
+                        <?php endif; ?>
+                    </div>
+                </a>
+                <div class="laca-project-list__card-body">
+                    <h3 class="laca-project-list__card-title">
+                        <a href="<?php echo esc_url( $post_url ); ?>"><?php echo esc_html( $post_title ); ?></a>
+                    </h3>
+                    <ul class="laca-project-list__card-meta">
+                        <?php if ( $investor ) : ?>
+                            <li>
+                                <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
+                                <?php esc_html_e( 'Chủ đầu tư: ', 'laca' ); ?><strong><?php echo esc_html( $investor ); ?></strong>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ( $location ) : ?>
+                            <li>
+                                <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
+                                <?php esc_html_e( 'Địa điểm: ', 'laca' ); ?><strong><?php echo esc_html( $location ); ?></strong>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ( $floors ) : ?>
+                            <li>
+                                <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M48 0C21.5 0 0 21.5 0 48L0 464c0 26.5 21.5 48 48 48l96 0 0-80c0-26.5 21.5-48 48-48s48 21.5 48 48l0 80 96 0c26.5 0 48-21.5 48-48L384 48c0-26.5-21.5-48-48-48L48 0zM64 240c0-8.8 7.2-16 16-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32zm112-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32zM64 96c0-8.8 7.2-16 16-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16L64 96zm112-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32z"/></svg>
+                                <?php esc_html_e( 'Số tầng: ', 'laca' ); ?><strong><?php echo esc_html( $floors ); ?></strong>
+                            </li>
+                        <?php endif; ?>
+                        <?php if ( $front_area ) : ?>
+                            <li>
+                                <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M344 0L488 0c13.3 0 24 10.7 24 24l0 144c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-39-39-87 87c-9.4 9.4-24.6 9.4-33.9 0l-32-32c-9.4-9.4-9.4-24.6 0-33.9l87-87L327 41c-6.9-6.9-8.9-17.2-5.2-26.2S334.3 0 344 0zM168 512L24 512c-13.3 0-24-10.7-24-24L0 344c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2l39 39 87-87c9.4-9.4 24.6-9.4 33.9 0l32 32c9.4 9.4 9.4 24.6 0 33.9l-87 87 39 39c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8z"/></svg>
+                                <?php esc_html_e( 'Mặt tiền: ', 'laca' ); ?><strong><?php echo esc_html( $front_area ); ?></strong>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </article>
+            <?php
+        }
+    }
+    $html = ob_get_clean();
+    wp_reset_postdata();
+
+    // Pagination HTML
+    $pagination_html = '';
+    if ( $query->max_num_pages > 1 ) {
+        $pages = paginate_links( [
+            'base'      => '%_%',
+            'format'    => '',
+            'current'   => $paged,
+            'total'     => $query->max_num_pages,
+            'mid_size'  => 2,
+            'type'      => 'array',
+            'prev_next' => true,
+            'prev_text' => '&laquo;',
+            'next_text' => '&raquo;',
+        ] );
+        if ( is_array( $pages ) ) {
+            $pagination_html = '<nav class="pagination-container" aria-label="Page navigation"><ul class="pagination-list">';
+            foreach ( $pages as $page ) {
+                $is_current  = strpos( $page, 'current' ) !== false;
+                $is_dots     = strpos( $page, 'dots' ) !== false;
+                $item_class  = 'pagination-item';
+                if ( $is_current ) $item_class .= ' is-active';
+                if ( $is_dots )    $item_class .= ' is-dots';
+                $pagination_html .= '<li class="' . esc_attr( $item_class ) . '">' . $page . '</li>';
+            }
+            $pagination_html .= '</ul></nav>';
+        }
+    }
+
+    wp_send_json_success( [
+        'html'       => $html,
+        'pagination' => $pagination_html,
+        'found'      => (int) $query->found_posts,
+        'max_pages'  => (int) $query->max_num_pages,
+        'current'    => $paged,
+    ] );
+}
+add_action( 'wp_ajax_lacadev_project_archive_load',        'lacadev_ajax_project_archive_load' );
+add_action( 'wp_ajax_nopriv_lacadev_project_archive_load', 'lacadev_ajax_project_archive_load' );
+
+// =============================================================================
 // CUSTOM POST TYPES
 // =============================================================================
 

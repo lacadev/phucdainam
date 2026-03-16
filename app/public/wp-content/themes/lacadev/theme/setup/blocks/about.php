@@ -41,13 +41,13 @@ Block::make(__('Block ABOUT ME', 'laca'))
 
                 <div class="block-about__img">
                     <figure>
-                        <img src="<?php echo $image; ?>" alt="<?php echo $title; ?>" loading="lazy">
+                        <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($title); ?>" loading="lazy">
                     </figure>
                 </div>
             </div>
             <div class="block-about__body">
-                <h2 class="block-title text-center"><?php echo $title; ?></h2>
-                <div class="block-desc"><?php echo $desc; ?></div>
+                <h2 class="block-title text-center"><?php echo esc_html($title); ?></h2>
+                <div class="block-desc"><?php echo wp_kses_post($desc); ?></div>
             </div>
 
         </section>

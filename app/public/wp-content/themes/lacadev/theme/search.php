@@ -77,8 +77,8 @@ $search_query = get_search_query();
                 <section class="search-section search-section--products">
                     <h2 class="search-section__title">
                         <strong><?php _e('Sản phẩm liên quan', 'laca'); ?></strong> 
-                        <span class="search-section__count" data-displayed="<?php echo $displayed_products; ?>" data-total="<?php echo $total_products; ?>">
-                            (hiển thị <?php echo $displayed_products; ?>/<?php echo $total_products; ?>)
+                        <span class="search-section__count" data-displayed="<?php echo esc_attr($displayed_products); ?>" data-total="<?php echo esc_attr($total_products); ?>">
+                            (hiển thị <?php echo esc_html($displayed_products); ?>/<?php echo esc_html($total_products); ?>)
                         </span>:
                     </h2>
                     <div class="list-post">
@@ -130,8 +130,8 @@ $search_query = get_search_query();
                 <section class="search-section search-section--posts">
                     <h2 class="search-section__title">
                         <strong><?php _e('Bài viết liên quan', 'laca'); ?></strong> 
-                        <span class="search-section__count" data-displayed="<?php echo $displayed_posts; ?>" data-total="<?php echo $total_posts; ?>">
-                            (hiển thị <?php echo $displayed_posts; ?>/<?php echo $total_posts; ?>)
+                        <span class="search-section__count" data-displayed="<?php echo esc_attr($displayed_posts); ?>" data-total="<?php echo esc_attr($total_posts); ?>">
+                            (hiển thị <?php echo esc_html($displayed_posts); ?>/<?php echo esc_html($total_posts); ?>)
                         </span>:
                     </h2>
                     <div class="list-post">
@@ -182,8 +182,8 @@ $search_query = get_search_query();
                 <section class="search-section search-section--pages">
                     <h2 class="search-section__title">
                         <strong><?php _e('Trang liên quan', 'laca'); ?></strong> 
-                        <span class="search-section__count" data-displayed="<?php echo $displayed_pages; ?>" data-total="<?php echo $total_pages; ?>">
-                            (hiển thị <?php echo $displayed_pages; ?>/<?php echo $total_pages; ?>)
+                        <span class="search-section__count" data-displayed="<?php echo esc_attr($displayed_pages); ?>" data-total="<?php echo esc_attr($total_pages); ?>">
+                            (hiển thị <?php echo esc_html($displayed_pages); ?>/<?php echo esc_html($total_pages); ?>)
                         </span>:
                     </h2>
                     <div class="list-post">
@@ -235,8 +235,8 @@ $search_query = get_search_query();
                     <section class="search-section search-section--<?php echo esc_attr($custom_type); ?>">
                         <h2 class="search-section__title">
                             <strong><?php printf(__('%s liên quan', 'laca'), esc_html($type_label)); ?></strong> 
-                            <span class="search-section__count" data-displayed="<?php echo $displayed_custom; ?>" data-total="<?php echo $total_custom; ?>">
-                                (hiển thị <?php echo $displayed_custom; ?>/<?php echo $total_custom; ?>)
+                            <span class="search-section__count" data-displayed="<?php echo esc_attr($displayed_custom); ?>" data-total="<?php echo esc_attr($total_custom); ?>">
+                                (hiển thị <?php echo esc_html($displayed_custom); ?>/<?php echo esc_html($total_custom); ?>)
                             </span>:
                         </h2>
                         <div class="list-post">
